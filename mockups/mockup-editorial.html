@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Identity Calculator — Mockup: Minimalist Editorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --bg-card: #faf6ef;
+    --ink: #1a1a1a;
+    --ink-soft: #5c564e;
+    --accent: #9c3b1f;
+    --line: #d9d1c3;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--ink); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+  body { min-height: 100vh; display: flex; flex-direction: column; }
+
+  header {
+    padding: 32px 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--line);
+  }
+  .brand {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .handle {
+    font-size: 12px;
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+  }
+
+  main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .left {
+    padding: 96px 72px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-right: 1px solid var(--line);
+  }
+  .right {
+    padding: 96px 72px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--bg-card);
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 32px;
+    font-weight: 500;
+  }
+  .eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+    vertical-align: middle;
+    margin-right: 14px;
+    margin-bottom: 3px;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(40px, 4.6vw, 64px);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    margin-bottom: 28px;
+    color: var(--ink);
+  }
+  h1 em {
+    font-style: italic;
+    font-weight: 400;
+  }
+  .sub {
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 440px;
+  }
+
+  .right h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    margin-bottom: 36px;
+    color: var(--ink);
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    max-width: 420px;
+  }
+  .field { position: relative; }
+  .field label {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 10px;
+  }
+  .field input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--ink);
+    padding: 8px 0 12px;
+    color: var(--ink);
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    transition: border-color 0.18s ease;
+  }
+  .field input::placeholder {
+    color: #b5ad9e;
+    font-style: italic;
+  }
+  .field input:focus {
+    outline: none;
+    border-bottom-color: var(--accent);
+  }
+
+  .cta {
+    margin-top: 18px;
+    background: var(--ink);
+    color: var(--bg);
+    border: none;
+    padding: 18px 28px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.18s ease;
+    align-self: flex-start;
+  }
+  .cta:hover { background: var(--accent); }
+  .cta-arrow {
+    display: inline-block;
+    margin-left: 10px;
+    transition: transform 0.2s ease;
+  }
+  .cta:hover .cta-arrow { transform: translateX(4px); }
+
+  .meta {
+    margin-top: 22px;
+    font-size: 12px;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+  }
+
+  footer {
+    padding: 24px 56px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 900px) {
+    main { grid-template-columns: 1fr; }
+    .left { padding: 60px 32px 40px; border-right: none; border-bottom: 1px solid var(--line); }
+    .right { padding: 40px 32px 60px; }
+    header { padding: 22px 28px; }
+    footer { padding: 18px 28px; }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand">Gareth Owen</div>
+    <div class="handle">@gareth.owen</div>
+  </header>
+
+  <main>
+    <section class="left">
+      <div class="eyebrow">The Identity Calculator</div>
+      <h1>How far are you from the man you're <em>meant to be?</em></h1>
+      <p class="sub">Ten questions. Three minutes. A clear-eyed look at the identity you're living in, the gap to the one you're becoming, and what's keeping you stuck.</p>
+    </section>
+
+    <section class="right">
+      <h2>Begin.</h2>
+      <form onsubmit="event.preventDefault(); alert('Mockup only — quiz starts here.');">
+        <div class="field">
+          <label for="name">Full name</label>
+          <input id="name" type="text" placeholder="Your full name" required />
+        </div>
+        <div class="field">
+          <label for="email">Email address</label>
+          <input id="email" type="email" placeholder="you@email.com" required />
+        </div>
+        <div class="field">
+          <label for="ig">Instagram handle</label>
+          <input id="ig" type="text" placeholder="@yourhandle" required />
+        </div>
+        <button class="cta" type="submit">
+          Begin the calculation
+          <span class="cta-arrow">→</span>
+        </button>
+        <p class="meta">10 questions · 3 minutes · Receive a personal PDF</p>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <span>Built by Gareth Owen</span>
+    <span>An Identity Diagnostic</span>
+  </footer>
+</body>
+</html>

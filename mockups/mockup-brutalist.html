@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Identity Calculator — Mockup: Brutalist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #000000;
+    --accent: #c8ff00;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--ink); font-family: 'Space Grotesk', sans-serif; -webkit-font-smoothing: antialiased; }
+  body { min-height: 100vh; display: flex; flex-direction: column; }
+
+  header {
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  .brand {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  .brand .square {
+    width: 18px;
+    height: 18px;
+    background: var(--ink);
+    display: inline-block;
+  }
+  .nav-meta {
+    color: var(--ink);
+    letter-spacing: 0.02em;
+  }
+  .nav-meta span { color: #888; margin: 0 6px; }
+
+  main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    border-bottom: 3px solid var(--ink);
+  }
+
+  .left {
+    padding: 56px 48px;
+    border-right: 3px solid var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+  .index {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    margin-bottom: 28px;
+    text-transform: uppercase;
+  }
+  .index .tag {
+    background: var(--accent);
+    color: var(--ink);
+    padding: 4px 10px;
+    margin-right: 12px;
+  }
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(48px, 7vw, 92px);
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    margin-bottom: 36px;
+  }
+  h1 .hl {
+    background: var(--accent);
+    padding: 0 8px;
+    display: inline-block;
+  }
+  .sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.55;
+    max-width: 460px;
+    margin-bottom: 28px;
+  }
+  .bullets {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    border-top: 2px solid var(--ink);
+    padding-top: 20px;
+  }
+  .bullets div {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+    text-transform: uppercase;
+  }
+  .bullets div span:first-child { color: #888; }
+
+  .right {
+    padding: 56px 48px;
+    background: var(--ink);
+    color: var(--bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .right .step {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .right h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    margin-bottom: 36px;
+  }
+
+  form { display: flex; flex-direction: column; gap: 20px; }
+  .field label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    color: #aaa;
+  }
+  .field input {
+    width: 100%;
+    background: var(--ink);
+    border: 2px solid #fff;
+    padding: 14px 16px;
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+  }
+  .field input::placeholder { color: #555; }
+  .field input:focus {
+    outline: none;
+    background: var(--accent);
+    color: var(--ink);
+    border-color: var(--accent);
+  }
+  .field input:focus::placeholder { color: #4a5a00; }
+
+  .cta {
+    margin-top: 12px;
+    background: var(--accent);
+    color: var(--ink);
+    border: 2px solid var(--accent);
+    padding: 22px 24px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .cta:hover {
+    background: var(--ink);
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .cta-arrow { font-family: 'JetBrains Mono', monospace; }
+
+  footer {
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  @media (max-width: 900px) {
+    main { grid-template-columns: 1fr; }
+    .left { border-right: none; border-bottom: 3px solid var(--ink); padding: 40px 24px; }
+    .right { padding: 40px 24px; }
+    header { padding: 14px 18px; }
+    footer { padding: 12px 18px; flex-direction: column; gap: 4px; }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <span class="square"></span>
+      <span>GARETH OWEN / IDENTITY CALCULATOR</span>
+    </div>
+    <div class="nav-meta">V1.0 <span>//</span> 10 QUESTIONS <span>//</span> 3 MIN</div>
+  </header>
+
+  <main>
+    <section class="left">
+      <div class="index"><span class="tag">001</span>WHO ARE YOU RIGHT NOW?</div>
+      <h1>HOW FAR<br/>FROM THE<br/><span class="hl">MAN</span> YOU<br/>SHOULD BE?</h1>
+      <p class="sub">A 10-question diagnostic. No fluff. You'll see exactly where your current identity ends and your real one begins — and what's holding the line between them.</p>
+      <div class="bullets">
+        <div><span>OUTPUT</span><span>SCORE · ARCHETYPE · GAPS</span></div>
+        <div><span>FORMAT</span><span>PDF · INSTANT</span></div>
+        <div><span>COST</span><span>FREE</span></div>
+      </div>
+    </section>
+
+    <section class="right">
+      <div class="step">[ STEP 01 / 02 ] CONFIRM IDENTITY</div>
+      <h2>ENTER YOUR<br/>DETAILS.</h2>
+      <form onsubmit="event.preventDefault(); alert('Mockup only — quiz starts here.');">
+        <div class="field">
+          <label for="name">FULL NAME</label>
+          <input id="name" type="text" placeholder="JOHN DOE" required />
+        </div>
+        <div class="field">
+          <label for="email">EMAIL</label>
+          <input id="email" type="email" placeholder="YOU@EMAIL.COM" required />
+        </div>
+        <div class="field">
+          <label for="ig">INSTAGRAM HANDLE</label>
+          <input id="ig" type="text" placeholder="@YOURHANDLE" required />
+        </div>
+        <button class="cta" type="submit">
+          BEGIN CALCULATION
+          <span class="cta-arrow">[→]</span>
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <span>© GARETH OWEN / @GARETH.OWEN</span>
+    <span>BUILT FOR MEN WHO ARE READY.</span>
+  </footer>
+</body>
+</html>

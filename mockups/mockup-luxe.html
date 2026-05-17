@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Identity Calculator — Mockup: Dark Luxe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg-elev: #121212;
+    --text: #f5efe4;
+    --text-dim: #8a857d;
+    --gold: #c9a96e;
+    --gold-bright: #e0c084;
+    --line: #2a2620;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 0%, rgba(201,169,110,0.08), transparent 70%),
+      var(--bg);
+  }
+
+  header {
+    padding: 28px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+  }
+  .brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+  .brand .dot { color: var(--gold); }
+  .handle {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+  }
+  .card {
+    width: 100%;
+    max-width: 560px;
+    text-align: center;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 28px;
+    padding: 6px 14px;
+    border: 1px solid var(--gold);
+    border-radius: 999px;
+  }
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(38px, 6vw, 58px);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-bottom: 22px;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .sub {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text-dim);
+    max-width: 460px;
+    margin: 0 auto 44px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: left;
+  }
+  .field { position: relative; }
+  .field label {
+    display: block;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .field input {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 16px 18px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    transition: border-color 0.18s ease, background 0.18s ease;
+  }
+  .field input::placeholder { color: #4a463f; }
+  .field input:focus {
+    outline: none;
+    border-color: var(--gold);
+    background: rgba(201,169,110,0.04);
+  }
+
+  .cta {
+    margin-top: 18px;
+    background: var(--gold);
+    color: #0a0a0a;
+    border: none;
+    border-radius: 2px;
+    padding: 18px 24px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.18s ease, transform 0.18s ease;
+  }
+  .cta:hover { background: var(--gold-bright); }
+  .cta:active { transform: translateY(1px); }
+
+  .meta {
+    margin-top: 22px;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-align: center;
+  }
+  .meta span { color: var(--gold); }
+
+  footer {
+    padding: 24px 40px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  @media (max-width: 600px) {
+    header { padding: 20px 22px; }
+    main { padding: 40px 18px; }
+    .eyebrow { font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand">Gareth<span class="dot">·</span>Owen</div>
+    <div class="handle">@gareth.owen</div>
+  </header>
+
+  <main>
+    <div class="card">
+      <span class="eyebrow">The Identity Calculator</span>
+      <h1>How far are you from the <em>man</em> you're meant to be?</h1>
+      <p class="sub">10 questions. 3 minutes. A clear-eyed look at the identity you're living in, the gap to the one you're becoming, and exactly what's keeping you stuck.</p>
+
+      <form onsubmit="event.preventDefault(); alert('Mockup only — quiz starts here.');">
+        <div class="field">
+          <label for="name">Full name</label>
+          <input id="name" type="text" placeholder="Your name" required />
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="you@email.com" required />
+        </div>
+        <div class="field">
+          <label for="ig">Instagram handle</label>
+          <input id="ig" type="text" placeholder="@yourhandle" required />
+        </div>
+        <button class="cta" type="submit">Begin the Calculation</button>
+        <p class="meta">10 Questions <span>·</span> 3 Minutes <span>·</span> Free</p>
+      </form>
+    </div>
+  </main>
+
+  <footer>Built by Gareth Owen</footer>
+</body>
+</html>
