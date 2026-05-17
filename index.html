@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#0a0a0a" />
+<title>The Identity Calculator · Gareth Owen</title>
+<meta name="description" content="A 10-question identity diagnostic for men who are ready to see clearly. Built by Gareth Owen." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brand">Gareth<span class="dot">·</span>Owen</div>
+  <div class="handle">@gareth.owen</div>
+</header>
+
+<!-- LANDING SCREEN -->
+<section class="screen active" id="screen-landing">
+  <div class="card">
+    <span class="eyebrow">The Identity Calculator</span>
+    <h1>How far are you from the <em>man</em> you're meant to be?</h1>
+    <p class="sub">12 questions. 4 minutes. A clear-eyed look at the identity you're living in, the gap to the one you're becoming, and exactly what's keeping you stuck.</p>
+
+    <div class="honesty-callout">
+      <div class="honesty-title">One rule before you begin: be brutally honest.</div>
+      <p>Soft answers give you soft results. The point is not to look good. The point is to see clearly. You cannot fix what you refuse to admit.</p>
+    </div>
+
+    <form id="lead-form" autocomplete="on">
+      <div class="field">
+        <label for="name">Full name</label>
+        <input id="name" name="name" type="text" placeholder="Your name" required autocomplete="name" />
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="you@email.com" required autocomplete="email" />
+      </div>
+      <div class="field">
+        <label for="ig">Instagram handle</label>
+        <input id="ig" name="ig" type="text" placeholder="@yourhandle" required />
+      </div>
+      <button class="cta" type="submit">Begin the Calculation</button>
+      <p class="meta">12 Questions <span>·</span> 4 Minutes <span>·</span> Free</p>
+    </form>
+  </div>
+</section>
+
+<!-- QUIZ SCREEN -->
+<section class="screen" id="screen-quiz">
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  <div class="card quiz-card">
+    <div class="quiz-meta">
+      <span id="q-counter">Question 1 of 12</span>
+      <span class="quiz-meta-divider">·</span>
+      <span>The Identity Calculator</span>
+    </div>
+    <h2 class="quiz-question" id="q-text"></h2>
+    <div class="quiz-options" id="q-options"></div>
+    <div class="quiz-nav">
+      <button class="link-btn" id="btn-back" type="button">← Back</button>
+      <button class="cta cta-quiet" id="btn-next" type="button" disabled>Next</button>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULATING SCREEN -->
+<section class="screen" id="screen-calculating">
+  <div class="calc-wrap">
+    <div class="calc-line"></div>
+    <p class="calc-text">Calculating your identity</p>
+    <p class="calc-sub">Hold the line.</p>
+  </div>
+</section>
+
+<!-- RESULTS SCREEN -->
+<section class="screen" id="screen-results">
+  <div class="card results-card">
+    <span class="eyebrow" id="result-eyebrow">Your Identity Diagnostic</span>
+
+    <div class="score-block">
+      <div class="score-circle">
+        <span class="score-number" id="identity-score">0</span>
+        <span class="score-suffix">/100</span>
+      </div>
+      <p class="score-label">Identity Alignment</p>
+    </div>
+
+    <div class="archetype-block">
+      <p class="archetype-label">Your archetype</p>
+      <h2 class="archetype-name" id="archetype-name">The Seeker</h2>
+      <p class="archetype-desc" id="archetype-desc"></p>
+    </div>
+
+    <div class="coachability-block">
+      <p class="coachability-label">Coachability</p>
+      <div class="coach-bar">
+        <div class="coach-fill" id="coach-fill"></div>
+      </div>
+      <p class="coach-value"><span id="coach-score">0</span>/100</p>
+    </div>
+
+    <div class="gaps-block">
+      <h3 class="gaps-title">Your three biggest leverage areas right now</h3>
+      <ol class="gaps-list" id="gaps-list"></ol>
+    </div>
+
+    <div class="verdict-block" id="verdict-block"></div>
+
+    <div class="cta-block" id="cta-block"></div>
+
+    <p class="meta results-footer">Built by Gareth Owen <span>·</span> @gareth.owen</p>
+  </div>
+</section>
+
+<footer class="site-footer">Built by Gareth Owen</footer>
+
+<!-- jsPDF for client-side PDF generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="pdf.js"></script>
+<script src="quiz.js"></script>
+
+</body>
+</html>
