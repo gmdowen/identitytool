@@ -10,7 +10,9 @@
     // First quiz submission will trigger a one-time confirmation email from
     // FormSubmit to Gmdowen@gmail.com. Click the link in it once and all
     // future leads arrive instantly as formatted emails.
-    LEAD_ENDPOINT: 'https://formsubmit.co/ajax/Gmdowen@gmail.com',
+    // Note: non-ajax endpoint + FormData submission avoids the CORS preflight
+    // that the JSON endpoint requires, so this works reliably from any origin.
+    LEAD_ENDPOINT: 'https://formsubmit.co/Gmdowen@gmail.com',
   };
 
   // ========== QUESTIONS ==========
@@ -442,14 +444,20 @@
       payload[`Q${num}. ${q.text}`] = answerText;
     });
 
+    // Use FormData so the request stays in the "simple CORS" lane
+    // (multipart/form-data) and never preflights. Works from any origin.
+    const formData = new FormData();
+    for (const k in payload) formData.append(k, String(payload[k]));
+
+    // no-cors mode: request is sent and FormSubmit processes it, but the
+    // browser does not attempt to read the response (FormSubmit does not
+    // return CORS headers on the non-ajax endpoint). This keeps the
+    // console clean.
     try {
       await fetch(CONFIG.LEAD_ENDPOINT, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify(payload),
+        mode: 'no-cors',
+        body: formData,
       });
     } catch (e) {
       console.warn('Lead POST error', e);
@@ -525,23 +533,28 @@
   }
 
   function downloadPDF(kind) {
-    if (typeof window.generateIdentityPDF !== 'function') {
-      alert('PDF generator not loaded.');
+    if (typeof window.generateIdentityPDF !== 'function' || !window.jspdf) {
+      alert('The PDF library did not load. Check your internet connection and try again. If this keeps happening, screenshot your results page and email gmdowen@gmail.com.');
       return;
     }
-    window.generateIdentityPDF({
-      kind,
-      lead: state.lead,
-      answers: state.answers,
-      results: state.results,
-      archetype: ARCHETYPES[state.results.archetype],
-      questions: QUESTIONS,
-      urls: {
-        calendly: CONFIG.CALENDLY_URL,
-        instagram: CONFIG.INSTAGRAM_URL,
-        youtube: CONFIG.YOUTUBE_URL,
-      },
-    });
+    try {
+      window.generateIdentityPDF({
+        kind,
+        lead: state.lead,
+        answers: state.answers,
+        results: state.results,
+        archetype: ARCHETYPES[state.results.archetype],
+        questions: QUESTIONS,
+        urls: {
+          calendly: CONFIG.CALENDLY_URL,
+          instagram: CONFIG.INSTAGRAM_URL,
+          youtube: CONFIG.YOUTUBE_URL,
+        },
+      });
+    } catch (err) {
+      console.error('PDF generation failed:', err);
+      alert('Something went wrong generating your PDF. Please screenshot your results and email gmdowen@gmail.com so we can send you the PDF manually.');
+    }
   }
 
   // ========== ANIMATIONS ==========
