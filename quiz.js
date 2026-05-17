@@ -6,13 +6,13 @@
     CALENDLY_URL: 'https://calendly.com/gmdowen/identityaudit',
     INSTAGRAM_URL: 'https://instagram.com/gareth.owen',
     YOUTUBE_URL: 'https://www.youtube.com/@garethowen',
-    // Lead capture goes to Gareth's Gmail via FormSubmit (no signup required).
-    // First quiz submission will trigger a one-time confirmation email from
-    // FormSubmit to Gmdowen@gmail.com. Click the link in it once and all
-    // future leads arrive instantly as formatted emails.
-    // Note: non-ajax endpoint + FormData submission avoids the CORS preflight
-    // that the JSON endpoint requires, so this works reliably from any origin.
-    LEAD_ENDPOINT: 'https://formsubmit.co/Gmdowen@gmail.com',
+    // Lead capture: posts to a Supabase Edge Function that writes the lead
+    // to the `leads` table and also fires an email notification via
+    // FormSubmit (server-side, so origin restrictions do not apply).
+    // Gareth views leads at:
+    //   https://supabase.com/dashboard/project/ysrlpduwbccfbowwcujk/editor
+    SUPABASE_URL: 'https://ysrlpduwbccfbowwcujk.supabase.co',
+    SUPABASE_KEY: 'sb_publishable_Bh22LYUOpBb-USnjSbGreg_eRGHGNYk',
   };
 
   // ========== QUESTIONS ==========
@@ -404,61 +404,48 @@
   }
 
   // ========== LEAD CAPTURE ==========
-  // Posts a human-readable payload to FormSubmit, which emails Gareth.
-  // Each lead arrives as a formatted email with full question text and
-  // selected answer text so it can be scanned at a glance.
+  // Posts each lead to the Supabase Edge Function, which writes a row to
+  // the `leads` table and also fires a notification email server-side.
   async function submitLead(lead, answers, results) {
-    if (!CONFIG.LEAD_ENDPOINT) return;
-    const archetypeName = ARCHETYPES[results.archetype].name;
-    const status = results.qualification.qualified
-      ? 'QUALIFIED: book the call'
-      : 'UNQUALIFIED: nurture path';
-    const blockers = results.qualification.blockers.join(', ') || 'none';
+    if (!CONFIG.SUPABASE_URL) return;
 
     const payload = {
-      _subject: `New Identity Calculator Lead: ${lead.name} (${results.qualification.qualified ? 'QUALIFIED' : 'UNQUALIFIED'})`,
-      _template: 'table',
-      _captcha: 'false',
-      _replyto: lead.email,
-      'Name': lead.name,
-      'Email': lead.email,
-      'Instagram': lead.ig,
-      'Status': status,
-      'Identity Score': `${results.identity} / 100`,
-      'Coachability Score': `${results.coach} / 100`,
-      'Archetype': archetypeName,
-      'Blockers': blockers,
-      'Submitted': new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
+      name: lead.name,
+      email: lead.email,
+      instagram: lead.ig,
+      identity_score: results.identity,
+      coachability_score: results.coach,
+      archetype: ARCHETYPES[results.archetype].name,
+      qualified: results.qualification.qualified,
+      blockers: results.qualification.blockers.join(', ') || 'none',
+      q1: answers.Q1,
+      q2: answers.Q2 || '',
+      q3: answers.Q3 || '',
+      q4: answers.Q4 || '',
+      q5: answers.Q5 || '',
+      q6: answers.Q6 || '',
+      q7: answers.Q7 || '',
+      q8: answers.Q8 || '',
+      q9: answers.Q9 || '',
+      q10: answers.Q10 || '',
+      q11: answers.Q11 || '',
+      q12: answers.Q12 || '',
     };
 
-    QUESTIONS.forEach((q, i) => {
-      const a = answers[q.id];
-      let answerText;
-      if (q.type === 'slider') {
-        answerText = `${a} / 10`;
-      } else {
-        const opt = q.options.find(o => o.v === a);
-        answerText = opt ? `${a}. ${opt.t}` : String(a ?? '');
-      }
-      const num = String(i + 1).padStart(2, '0');
-      payload[`Q${num}. ${q.text}`] = answerText;
-    });
-
-    // Use FormData so the request stays in the "simple CORS" lane
-    // (multipart/form-data) and never preflights. Works from any origin.
-    const formData = new FormData();
-    for (const k in payload) formData.append(k, String(payload[k]));
-
-    // no-cors mode: request is sent and FormSubmit processes it, but the
-    // browser does not attempt to read the response (FormSubmit does not
-    // return CORS headers on the non-ajax endpoint). This keeps the
-    // console clean.
     try {
-      await fetch(CONFIG.LEAD_ENDPOINT, {
+      const res = await fetch(CONFIG.SUPABASE_URL + '/functions/v1/submit-lead', {
         method: 'POST',
-        mode: 'no-cors',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + CONFIG.SUPABASE_KEY,
+          'apikey': CONFIG.SUPABASE_KEY,
+        },
+        body: JSON.stringify(payload),
       });
+      if (!res.ok) {
+        const text = await res.text().catch(() => '');
+        console.warn('Lead POST non-OK:', res.status, text);
+      }
     } catch (e) {
       console.warn('Lead POST error', e);
     }
