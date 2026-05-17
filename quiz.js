@@ -2,12 +2,15 @@
   'use strict';
 
   // ========== CONFIG ==========
-  // Swap these three values once you have them.
   const CONFIG = {
-    CALENDLY_URL: 'https://calendly.com/gareth-owen/identity-call', // TODO: replace with your real Calendly link
+    CALENDLY_URL: 'https://calendly.com/gmdowen/1on1withgareth',
     INSTAGRAM_URL: 'https://instagram.com/gareth.owen',
-    YOUTUBE_URL: 'https://youtube.com/@gareth.owen', // TODO: replace with your real YouTube handle
-    SHEETS_ENDPOINT: '', // TODO: paste your Google Apps Script web app URL here
+    YOUTUBE_URL: 'https://www.youtube.com/@garethowen',
+    // Lead capture goes to Gareth's Gmail via FormSubmit (no signup required).
+    // First quiz submission will trigger a one-time confirmation email from
+    // FormSubmit to Gmdowen@gmail.com. Click the link in it once and all
+    // future leads arrive instantly as formatted emails.
+    LEAD_ENDPOINT: 'https://formsubmit.co/ajax/Gmdowen@gmail.com',
   };
 
   // ========== QUESTIONS ==========
@@ -390,7 +393,7 @@
     $('#progress-fill').style.width = '100%';
     showScreen('screen-calculating');
     // Fire lead capture in background
-    submitToSheet(state.lead, state.answers, state.results)
+    submitLead(state.lead, state.answers, state.results)
       .catch(err => console.warn('Lead capture failed (non-blocking):', err));
     setTimeout(() => {
       showScreen('screen-results');
@@ -399,29 +402,57 @@
   }
 
   // ========== LEAD CAPTURE ==========
-  async function submitToSheet(lead, answers, results) {
-    if (!CONFIG.SHEETS_ENDPOINT) return;
+  // Posts a human-readable payload to FormSubmit, which emails Gareth.
+  // Each lead arrives as a formatted email with full question text and
+  // selected answer text so it can be scanned at a glance.
+  async function submitLead(lead, answers, results) {
+    if (!CONFIG.LEAD_ENDPOINT) return;
+    const archetypeName = ARCHETYPES[results.archetype].name;
+    const status = results.qualification.qualified
+      ? 'QUALIFIED: book the call'
+      : 'UNQUALIFIED: nurture path';
+    const blockers = results.qualification.blockers.join(', ') || 'none';
+
     const payload = {
-      timestamp: new Date().toISOString(),
-      name: lead.name,
-      email: lead.email,
-      instagram: lead.ig,
-      identityScore: results.identity,
-      coachabilityScore: results.coach,
-      archetype: ARCHETYPES[results.archetype].name,
-      qualified: results.qualification.qualified ? 'YES' : 'NO',
-      blockers: results.qualification.blockers.join(', ') || 'none',
-      ...Object.fromEntries(QUESTIONS.map(q => [q.id, answers[q.id] ?? ''])),
+      _subject: `New Identity Calculator Lead: ${lead.name} (${results.qualification.qualified ? 'QUALIFIED' : 'UNQUALIFIED'})`,
+      _template: 'table',
+      _captcha: 'false',
+      _replyto: lead.email,
+      'Name': lead.name,
+      'Email': lead.email,
+      'Instagram': lead.ig,
+      'Status': status,
+      'Identity Score': `${results.identity} / 100`,
+      'Coachability Score': `${results.coach} / 100`,
+      'Archetype': archetypeName,
+      'Blockers': blockers,
+      'Submitted': new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
     };
+
+    QUESTIONS.forEach((q, i) => {
+      const a = answers[q.id];
+      let answerText;
+      if (q.type === 'slider') {
+        answerText = `${a} / 10`;
+      } else {
+        const opt = q.options.find(o => o.v === a);
+        answerText = opt ? `${a}. ${opt.t}` : String(a ?? '');
+      }
+      const num = String(i + 1).padStart(2, '0');
+      payload[`Q${num}. ${q.text}`] = answerText;
+    });
+
     try {
-      await fetch(CONFIG.SHEETS_ENDPOINT, {
+      await fetch(CONFIG.LEAD_ENDPOINT, {
         method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
         body: JSON.stringify(payload),
       });
     } catch (e) {
-      console.warn('Sheet POST error', e);
+      console.warn('Lead POST error', e);
     }
   }
 
