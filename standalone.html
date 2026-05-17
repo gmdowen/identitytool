@@ -1,0 +1,1805 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#0a0a0a" />
+<title>The Identity Calculator · Gareth Owen</title>
+<meta name="description" content="A 10-question identity diagnostic for men who are ready to see clearly. Built by Gareth Owen." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --bg-elev: #121212;
+  --bg-card: #131210;
+  --text: #f5efe4;
+  --text-dim: #8a857d;
+  --text-soft: #b3ada3;
+  --gold: #c9a96e;
+  --gold-bright: #e0c084;
+  --gold-soft: rgba(201, 169, 110, 0.14);
+  --line: #2a2620;
+  --line-strong: #3a342b;
+  --danger: #b96a4a;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(201,169,110,0.07), transparent 70%),
+    var(--bg);
+}
+
+a { color: inherit; }
+button { font-family: inherit; }
+
+/* HEADER */
+.site-header {
+  padding: 24px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 10;
+}
+.brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.brand .dot { color: var(--gold); }
+.handle {
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.site-footer {
+  padding: 22px 40px;
+  border-top: 1px solid var(--line);
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* SCREEN BASE */
+.screen {
+  display: none;
+  flex: 1;
+  padding: 60px 24px;
+  justify-content: center;
+  align-items: flex-start;
+}
+.screen.active { display: flex; }
+
+.card {
+  width: 100%;
+  max-width: 580px;
+  text-align: center;
+}
+
+/* TYPOGRAPHY SHARED */
+.eyebrow {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 26px;
+  padding: 6px 14px;
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+}
+
+h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  font-size: clamp(36px, 5.6vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin-bottom: 22px;
+}
+h1 em {
+  font-style: italic;
+  color: var(--gold);
+}
+.sub {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-dim);
+  max-width: 480px;
+  margin: 0 auto 32px;
+}
+
+/* HONESTY CALLOUT */
+.honesty-callout {
+  border: 1px solid var(--gold);
+  background: var(--gold-soft);
+  padding: 22px 26px;
+  text-align: left;
+  margin: 0 auto 36px;
+  max-width: 480px;
+  border-radius: 2px;
+}
+.honesty-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--gold);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.honesty-callout p {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-soft);
+}
+
+/* FORMS */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: left;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.field label {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+.field input {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 16px 18px;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+.field input::placeholder { color: #4a463f; }
+.field input:focus {
+  outline: none;
+  border-color: var(--gold);
+  background: rgba(201,169,110,0.04);
+}
+
+/* BUTTONS */
+.cta {
+  background: var(--gold);
+  color: #0a0a0a;
+  border: none;
+  border-radius: 2px;
+  padding: 18px 24px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease;
+  margin-top: 14px;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+}
+.cta:hover { background: var(--gold-bright); }
+.cta:active { transform: translateY(1px); }
+.cta:disabled { background: var(--line); color: var(--text-dim); cursor: not-allowed; }
+.cta-quiet {
+  background: transparent;
+  color: var(--gold);
+  border: 1px solid var(--gold);
+}
+.cta-quiet:hover { background: var(--gold); color: #0a0a0a; }
+.cta-quiet:disabled { border-color: var(--line); color: var(--text-dim); background: transparent; }
+.cta-secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--line-strong);
+}
+.cta-secondary:hover { background: var(--bg-elev); border-color: var(--gold); color: var(--gold); }
+
+.link-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 8px 0;
+  transition: color 0.18s ease;
+}
+.link-btn:hover { color: var(--gold); }
+.link-btn:disabled { color: var(--line); cursor: not-allowed; }
+
+.meta {
+  margin-top: 22px;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: center;
+}
+.meta span { color: var(--gold); }
+
+/* QUIZ SCREEN */
+.progress-bar {
+  position: fixed;
+  top: 73px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--line);
+  z-index: 5;
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--gold);
+  transition: width 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.quiz-card { max-width: 680px; text-align: left; }
+.quiz-meta {
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 32px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+.quiz-meta-divider { color: var(--gold); }
+.quiz-question {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  font-size: clamp(26px, 3.6vw, 38px);
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+  margin-bottom: 36px;
+  color: var(--text);
+}
+.quiz-question em { font-style: italic; color: var(--gold); }
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 36px;
+}
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.option:hover {
+  border-color: var(--gold);
+  background: rgba(201,169,110,0.03);
+}
+.option.selected {
+  border-color: var(--gold);
+  background: var(--gold-soft);
+}
+.option-letter {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  font-style: italic;
+  transition: all 0.15s ease;
+}
+.option:hover .option-letter,
+.option.selected .option-letter {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.option.selected .option-letter {
+  background: var(--gold);
+  color: #0a0a0a;
+}
+.option-text { flex: 1; padding-top: 3px; }
+
+/* SLIDER (Q1) */
+.slider-wrap {
+  margin-bottom: 36px;
+  padding: 20px 4px 4px;
+}
+.slider-track-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 26px;
+}
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 2px;
+  background: var(--line-strong);
+  outline: none;
+  border-radius: 0;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  background: var(--gold);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--gold);
+  transition: transform 0.12s ease;
+}
+.slider::-webkit-slider-thumb:hover { transform: scale(1.1); }
+.slider::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  background: var(--gold);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--gold);
+}
+.slider-value {
+  text-align: center;
+  margin-top: 22px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 56px;
+  font-weight: 500;
+  color: var(--gold);
+  line-height: 1;
+}
+.slider-value-suffix {
+  font-size: 18px;
+  color: var(--text-dim);
+  margin-left: 4px;
+}
+
+.quiz-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+}
+
+/* CALCULATING */
+.calc-wrap {
+  text-align: center;
+  padding-top: 80px;
+  width: 100%;
+}
+.calc-line {
+  width: 0;
+  height: 2px;
+  background: var(--gold);
+  margin: 0 auto 28px;
+  animation: lineGrow 1.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+@keyframes lineGrow {
+  0% { width: 0; }
+  100% { width: 220px; }
+}
+.calc-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 28px;
+  color: var(--text);
+  margin-bottom: 8px;
+  letter-spacing: -0.005em;
+}
+.calc-text::after {
+  content: '...';
+  animation: dots 1.4s steps(3, end) infinite;
+}
+@keyframes dots {
+  0%, 20% { content: ''; }
+  40% { content: '.'; }
+  60% { content: '..'; }
+  80%, 100% { content: '...'; }
+}
+.calc-sub {
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* RESULTS */
+.results-card { max-width: 640px; text-align: center; }
+
+.score-block {
+  margin: 0 auto 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.score-circle {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 1px solid var(--gold);
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  margin-bottom: 18px;
+  background:
+    radial-gradient(circle at center, rgba(201,169,110,0.08), transparent 70%);
+  position: relative;
+}
+.score-circle::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+}
+.score-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  font-size: 86px;
+  color: var(--gold);
+  line-height: 1;
+}
+.score-suffix {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  color: var(--text-dim);
+  margin-left: 2px;
+}
+.score-label {
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.archetype-block {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 32px 0;
+  margin-bottom: 36px;
+}
+.archetype-label {
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+.archetype-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  font-style: italic;
+  font-size: clamp(36px, 5vw, 48px);
+  color: var(--gold);
+  margin-bottom: 18px;
+  line-height: 1.1;
+}
+.archetype-desc {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-soft);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.coachability-block {
+  margin-bottom: 36px;
+  max-width: 360px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.coachability-label {
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 14px;
+}
+.coach-bar {
+  height: 3px;
+  background: var(--line);
+  position: relative;
+  margin-bottom: 12px;
+}
+.coach-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--gold);
+  transition: width 1s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.coach-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  color: var(--text);
+}
+
+.gaps-block {
+  text-align: left;
+  margin-bottom: 40px;
+  border: 1px solid var(--line);
+  padding: 28px 28px 28px 28px;
+  border-radius: 2px;
+}
+.gaps-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  font-style: italic;
+  font-size: 20px;
+  color: var(--gold);
+  margin-bottom: 18px;
+  line-height: 1.3;
+}
+.gaps-list {
+  list-style: none;
+  counter-reset: gap;
+}
+.gaps-list li {
+  counter-increment: gap;
+  padding: 14px 0 14px 44px;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text-soft);
+}
+.gaps-list li:last-child { border-bottom: none; padding-bottom: 0; }
+.gaps-list li::before {
+  content: counter(gap, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 14px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  color: var(--gold);
+  font-size: 18px;
+}
+
+.verdict-block {
+  text-align: left;
+  padding: 32px;
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--gold);
+  margin-bottom: 32px;
+  border-radius: 2px;
+}
+.verdict-block h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 22px;
+  color: var(--gold);
+  margin-bottom: 14px;
+  line-height: 1.3;
+}
+.verdict-block p {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-soft);
+  margin-bottom: 12px;
+}
+.verdict-block p:last-child { margin-bottom: 0; }
+.verdict-block strong { color: var(--text); font-weight: 500; }
+
+.cta-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+.cta-block .cta { margin-top: 0; }
+.cta-block .cta-row {
+  display: flex;
+  gap: 12px;
+}
+.cta-block .cta-row .cta { flex: 1; }
+
+.results-footer { margin-top: 12px; }
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .site-header { padding: 18px 20px; }
+  .progress-bar { top: 61px; }
+  .screen { padding: 40px 18px; }
+  .quiz-card, .results-card { padding: 0; }
+  .option { padding: 16px 16px; font-size: 14px; gap: 12px; }
+  .option-letter { width: 26px; height: 26px; font-size: 12px; }
+  .score-circle { width: 170px; height: 170px; }
+  .score-number { font-size: 72px; }
+  .gaps-block, .verdict-block { padding: 22px; }
+  .quiz-meta { font-size: 10px; gap: 10px; flex-wrap: wrap; }
+  .honesty-callout { padding: 18px 20px; }
+  .cta { padding: 16px 20px; letter-spacing: 0.22em; font-size: 12px; }
+}
+
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brand">Gareth<span class="dot">·</span>Owen</div>
+  <div class="handle">@gareth.owen</div>
+</header>
+
+<!-- LANDING SCREEN -->
+<section class="screen active" id="screen-landing">
+  <div class="card">
+    <span class="eyebrow">The Identity Calculator</span>
+    <h1>How far are you from the <em>man</em> you're meant to be?</h1>
+    <p class="sub">12 questions. 4 minutes. A clear-eyed look at the identity you're living in, the gap to the one you're becoming, and exactly what's keeping you stuck.</p>
+
+    <div class="honesty-callout">
+      <div class="honesty-title">One rule before you begin: be brutally honest.</div>
+      <p>Soft answers give you soft results. The point is not to look good. The point is to see clearly. You cannot fix what you refuse to admit.</p>
+    </div>
+
+    <form id="lead-form" autocomplete="on">
+      <div class="field">
+        <label for="name">Full name</label>
+        <input id="name" name="name" type="text" placeholder="Your name" required autocomplete="name" />
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="you@email.com" required autocomplete="email" />
+      </div>
+      <div class="field">
+        <label for="ig">Instagram handle</label>
+        <input id="ig" name="ig" type="text" placeholder="@yourhandle" required />
+      </div>
+      <button class="cta" type="submit">Begin the Calculation</button>
+      <p class="meta">12 Questions <span>·</span> 4 Minutes <span>·</span> Free</p>
+    </form>
+  </div>
+</section>
+
+<!-- QUIZ SCREEN -->
+<section class="screen" id="screen-quiz">
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  <div class="card quiz-card">
+    <div class="quiz-meta">
+      <span id="q-counter">Question 1 of 12</span>
+      <span class="quiz-meta-divider">·</span>
+      <span>The Identity Calculator</span>
+    </div>
+    <h2 class="quiz-question" id="q-text"></h2>
+    <div class="quiz-options" id="q-options"></div>
+    <div class="quiz-nav">
+      <button class="link-btn" id="btn-back" type="button">← Back</button>
+      <button class="cta cta-quiet" id="btn-next" type="button" disabled>Next</button>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULATING SCREEN -->
+<section class="screen" id="screen-calculating">
+  <div class="calc-wrap">
+    <div class="calc-line"></div>
+    <p class="calc-text">Calculating your identity</p>
+    <p class="calc-sub">Hold the line.</p>
+  </div>
+</section>
+
+<!-- RESULTS SCREEN -->
+<section class="screen" id="screen-results">
+  <div class="card results-card">
+    <span class="eyebrow" id="result-eyebrow">Your Identity Diagnostic</span>
+
+    <div class="score-block">
+      <div class="score-circle">
+        <span class="score-number" id="identity-score">0</span>
+        <span class="score-suffix">/100</span>
+      </div>
+      <p class="score-label">Identity Alignment</p>
+    </div>
+
+    <div class="archetype-block">
+      <p class="archetype-label">Your archetype</p>
+      <h2 class="archetype-name" id="archetype-name">The Seeker</h2>
+      <p class="archetype-desc" id="archetype-desc"></p>
+    </div>
+
+    <div class="coachability-block">
+      <p class="coachability-label">Coachability</p>
+      <div class="coach-bar">
+        <div class="coach-fill" id="coach-fill"></div>
+      </div>
+      <p class="coach-value"><span id="coach-score">0</span>/100</p>
+    </div>
+
+    <div class="gaps-block">
+      <h3 class="gaps-title">Your three biggest leverage areas right now</h3>
+      <ol class="gaps-list" id="gaps-list"></ol>
+    </div>
+
+    <div class="verdict-block" id="verdict-block"></div>
+
+    <div class="cta-block" id="cta-block"></div>
+
+    <p class="meta results-footer">Built by Gareth Owen <span>·</span> @gareth.owen</p>
+  </div>
+</section>
+
+<footer class="site-footer">Built by Gareth Owen</footer>
+
+<!-- jsPDF for client-side PDF generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  // Colors (RGB)
+  const BG = [10, 10, 10];
+  const TEXT = [245, 239, 228];
+  const TEXT_DIM = [138, 133, 125];
+  const TEXT_SOFT = [179, 173, 163];
+  const GOLD = [201, 169, 110];
+  const LINE = [42, 38, 32];
+
+  const PAGE_W = 210;   // A4 portrait mm
+  const PAGE_H = 297;
+  const MARGIN = 22;
+  const CONTENT_W = PAGE_W - MARGIN * 2;
+
+  const FIVE_SIGNS = [
+    {
+      title: "1. You spend money on everything except yourself.",
+      body: "Cars, clothes, nights out, holidays, but the moment it is you on the invoice, suddenly it is \"too much.\" The truth of where you actually believe value lives is in your bank statement, not in what you say.",
+      action: "Track every dollar you spend for the next 30 days. The truth is in the numbers.",
+    },
+    {
+      title: "2. You flinch when someone tells you the truth about you.",
+      body: "If feedback makes you defensive, no coach, no friend, and no system can help you. You will collect more advice than any man alive and still be exactly where you are a year from now.",
+      action: "Ask one person you trust for one piece of hard feedback this week. Sit with it 48 hours before you respond.",
+    },
+    {
+      title: "3. You are addicted to thinking about change instead of making it.",
+      body: "Plans, vision boards, journals, podcasts. All motion, no action. You have convinced yourself that thinking about the work is the work. It is not.",
+      action: "Pick the smallest concrete action you have been avoiding. Do it before this day ends.",
+    },
+    {
+      title: "4. You are still letting other people's opinions write your script.",
+      body: "Every time you change your behaviour for someone whose opinion you do not actually want at your funeral, you betray the man you are meant to become. That is a quiet, daily betrayal.",
+      action: "List the five people whose opinions you would want at your funeral. Anyone else's opinion is noise. Read that list every single morning until it lives in your bones.",
+    },
+    {
+      title: "5. You are using pain as fuel instead of purpose.",
+      body: "Pain runs out. Purpose compounds. Men who run on pain crash the moment things get comfortable. Men who run on purpose keep moving when no one is watching.",
+      action: "Write down who you are becoming and why it matters beyond you in one sentence. Read it before every hard decision.",
+    },
+  ];
+
+  function fillPage(doc) {
+    doc.setFillColor(...BG);
+    doc.rect(0, 0, PAGE_W, PAGE_H, 'F');
+  }
+
+  function topBar(doc) {
+    doc.setFillColor(...GOLD);
+    doc.rect(0, 0, PAGE_W, 0.8, 'F');
+  }
+
+  function eyebrow(doc, y, text) {
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(...GOLD);
+    doc.setCharSpace(1.4);
+    doc.text(text, MARGIN, y);
+    doc.setCharSpace(0);
+  }
+
+  function pageMeta(doc, leadName) {
+    eyebrow(doc, 14, 'THE IDENTITY CALCULATOR');
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(...TEXT_DIM);
+    doc.setCharSpace(1.4);
+    doc.text((leadName || '').toUpperCase(), PAGE_W - MARGIN, 14, { align: 'right' });
+    doc.setCharSpace(0);
+  }
+
+  function bottomFooter(doc, pageNum, totalPages) {
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(...TEXT_DIM);
+    doc.setCharSpace(1.4);
+    doc.text('GARETH OWEN  ·  @GARETH.OWEN', MARGIN, PAGE_H - 12);
+    doc.text(`${pageNum} / ${totalPages}`, PAGE_W - MARGIN, PAGE_H - 12, { align: 'right' });
+    doc.setCharSpace(0);
+  }
+
+  function divider(doc, y) {
+    doc.setDrawColor(...LINE);
+    doc.setLineWidth(0.2);
+    doc.line(MARGIN, y, PAGE_W - MARGIN, y);
+  }
+
+  function wrappedText(doc, text, x, y, maxWidth, lineHeight) {
+    const lines = doc.splitTextToSize(text, maxWidth);
+    lines.forEach((line, i) => {
+      doc.text(line, x, y + i * lineHeight);
+    });
+    return y + lines.length * lineHeight;
+  }
+
+  function drawCoverPage(doc, data) {
+    fillPage(doc);
+    topBar(doc);
+    pageMeta(doc, data.lead.name);
+
+    // "An identity diagnostic for {Name}"
+    let y = 38;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(...TEXT_DIM);
+    doc.text('An identity diagnostic for', MARGIN, y);
+    y += 8;
+    doc.setFont('times', 'italic');
+    doc.setFontSize(28);
+    doc.setTextColor(...TEXT);
+    doc.text(data.lead.name, MARGIN, y);
+
+    // Date
+    y += 7;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(...TEXT_DIM);
+    doc.setCharSpace(1.2);
+    doc.text(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).toUpperCase(), MARGIN, y);
+    doc.setCharSpace(0);
+
+    divider(doc, y + 8);
+
+    // SCORE
+    y = 100;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(...TEXT_DIM);
+    doc.setCharSpace(1.6);
+    doc.text('IDENTITY ALIGNMENT', PAGE_W / 2, y, { align: 'center' });
+    doc.setCharSpace(0);
+
+    y += 18;
+    doc.setFont('times', 'normal');
+    doc.setFontSize(96);
+    doc.setTextColor(...GOLD);
+    doc.text(String(data.results.identity), PAGE_W / 2, y, { align: 'center' });
+    doc.setFontSize(18);
+    doc.setTextColor(...TEXT_DIM);
+    const numWidth = doc.getTextWidth(String(data.results.identity));
+    doc.text('/100', PAGE_W / 2 + numWidth / 2 + 3, y);
+
+    y += 14;
+    divider(doc, y);
+
+    // Archetype
+    y += 16;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(...TEXT_DIM);
+    doc.setCharSpace(1.6);
+    doc.text('YOUR ARCHETYPE', MARGIN, y);
+    doc.setCharSpace(0);
+
+    y += 10;
+    doc.setFont('times', 'italic');
+    doc.setFontSize(30);
+    doc.setTextColor(...GOLD);
+    doc.text(data.archetype.name, MARGIN, y);
+
+    y += 12;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(11);
+    doc.setTextColor(...TEXT_SOFT);
+    y = wrappedText(doc, data.archetype.desc, MARGIN, y, CONTENT_W, 5.6);
+
+    // Coachability
+    y += 12;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(...TEXT_DIM);
+    doc.setCharSpace(1.6);
+    doc.text('COACHABILITY', MARGIN, y);
+    doc.setCharSpace(0);
+
+    y += 4;
+    const barY = y + 1;
+    const barW = CONTENT_W;
+    doc.setFillColor(...LINE);
+    doc.rect(MARGIN, barY, barW, 1.2, 'F');
+    doc.setFillColor(...GOLD);
+    doc.rect(MARGIN, barY, barW * (data.results.coach / 100), 1.2, 'F');
+
+    y += 9;
+    doc.setFont('times', 'normal');
+    doc.setFontSize(13);
+    doc.setTextColor(...TEXT);
+    doc.text(`${data.results.coach}/100`, MARGIN, y);
+  }
+
+  function drawGapsPage(doc, data) {
+    doc.addPage();
+    fillPage(doc);
+    topBar(doc);
+    pageMeta(doc, data.lead.name);
+
+    let y = 50;
+    doc.setFont('times', 'italic');
+    doc.setFontSize(26);
+    doc.setTextColor(...GOLD);
+    y = wrappedText(doc, 'The three biggest leverage areas in your life right now', MARGIN, y, CONTENT_W, 10);
+
+    y += 8;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10.5);
+    doc.setTextColor(...TEXT_DIM);
+    y = wrappedText(doc, 'These are the three weakest scoring areas in your diagnostic. Address them in this order and the rest of your identity moves with them.', MARGIN, y, CONTENT_W, 5.2);
+
+    y += 10;
+    divider(doc, y);
+    y += 12;
+
+    data.results.gaps.forEach((g, i) => {
+      const num = String(i + 1).padStart(2, '0');
+      doc.setFont('times', 'italic');
+      doc.setFontSize(22);
+      doc.setTextColor(...GOLD);
+      doc.text(num, MARGIN, y);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(12);
+      doc.setTextColor(...TEXT);
+      const after = wrappedText(doc, g.text, MARGIN + 16, y - 2, CONTENT_W - 16, 6);
+
+      y = after + 10;
+      divider(doc, y - 4);
+      y += 4;
+    });
+  }
+
+  function drawQualifiedNextPage(doc, data) {
+    doc.addPage();
+    fillPage(doc);
+    topBar(doc);
+    pageMeta(doc, data.lead.name);
+
+    let y = 50;
+    doc.setFont('times', 'italic');
+    doc.setFontSize(28);
+    doc.setTextColor(...GOLD);
+    y = wrappedText(doc, "What's next.", MARGIN, y, CONTENT_W, 10);
+
+    y += 8;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(12);
+    doc.setTextColor(...TEXT);
+    const text1 = "Based on your diagnostic, you are the kind of man this work was built for. You are not where you want to be, and you know it. The fire is lit. You are hungry. You are coachable. You are ready to move.";
+    y = wrappedText(doc, text1, MARGIN, y, CONTENT_W, 6);
+
+    y += 6;
+    doc.setTextColor(...TEXT_SOFT);
+    const text2 = "Programs start at $3,500 for the strongest results. The higher the commitment you make, the deeper the transformation you walk out with. Full details on the call.";
+    y = wrappedText(doc, text2, MARGIN, y, CONTENT_W, 6);
+
+    // Booking box
+    y += 14;
+    doc.setDrawColor(...GOLD);
+    doc.setLineWidth(0.3);
+    doc.rect(MARGIN, y, CONTENT_W, 44);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(...GOLD);
+    doc.setCharSpace(1.8);
+    doc.text('BOOK YOUR CALL', MARGIN + 8, y + 12);
+    doc.setCharSpace(0);
+
+    doc.setFont('times', 'italic');
+    doc.setFontSize(18);
+    doc.setTextColor(...TEXT);
+    doc.text('Identity Transformation Call', MARGIN + 8, y + 22);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(...TEXT_DIM);
+    doc.textWithLink(data.calendlyUrl, MARGIN + 8, y + 35, { url: data.calendlyUrl });
+
+    // What happens on the call
+    y += 60;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(...TEXT_DIM);
+    doc.setCharSpace(1.6);
+    doc.text('WHAT HAPPENS ON THE CALL', MARGIN, y);
+    doc.setCharSpace(0);
+
+    y += 8;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(11);
+    doc.setTextColor(...TEXT_SOFT);
+    const callItems = [
+      'We go deep on your past and how you used to operate.',
+      'We get honest about your current routine and where it is failing you.',
+      'We define your one or two biggest goals for the next 90 days.',
+      'We work out why you booked this call in the first place.',
+      'If we are a fit, I show you exactly what working together looks like.',
+    ];
+    callItems.forEach((line) => {
+      doc.setTextColor(...GOLD);
+      doc.text('·', MARGIN, y);
+      doc.setTextColor(...TEXT_SOFT);
+      y = wrappedText(doc, line, MARGIN + 5, y, CONTENT_W - 5, 5.6);
+      y += 3;
+    });
+  }
+
+  function drawFiveSignsPages(doc, data) {
+    // First sign page
+    doc.addPage();
+    fillPage(doc);
+    topBar(doc);
+    pageMeta(doc, data.lead.name);
+
+    let y = 50;
+    doc.setFont('times', 'italic');
+    doc.setFontSize(28);
+    doc.setTextColor(...GOLD);
+    y = wrappedText(doc, "Five signs you are not ready (yet).", MARGIN, y, CONTENT_W, 10);
+
+    y += 8;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(11);
+    doc.setTextColor(...TEXT_DIM);
+    const intro = "This is not a list to make you feel bad. This is a list to make you see clearly. Sit with the ones that landed. Take the action under each one.";
+    y = wrappedText(doc, intro, MARGIN, y, CONTENT_W, 5.6);
+
+    y += 10;
+    divider(doc, y);
+    y += 12;
+
+    FIVE_SIGNS.forEach((sign, idx) => {
+      // Estimate space for this sign block
+      const titleLines = doc.splitTextToSize(sign.title, CONTENT_W).length;
+      const bodyLines = doc.splitTextToSize(sign.body, CONTENT_W).length;
+      const actionLines = doc.splitTextToSize(sign.action, CONTENT_W - 8).length;
+      const blockHeight = titleLines * 8 + bodyLines * 5.4 + actionLines * 5.2 + 30;
+      if (y + blockHeight > PAGE_H - 28) {
+        doc.addPage();
+        fillPage(doc);
+        topBar(doc);
+        pageMeta(doc, data.lead.name);
+        y = 40;
+      }
+
+      // Title
+      doc.setFont('times', 'italic');
+      doc.setFontSize(16);
+      doc.setTextColor(...GOLD);
+      y = wrappedText(doc, sign.title, MARGIN, y, CONTENT_W, 7.5);
+
+      // Body
+      y += 4;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(11);
+      doc.setTextColor(...TEXT);
+      y = wrappedText(doc, sign.body, MARGIN, y, CONTENT_W, 5.6);
+
+      // Action
+      y += 5;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8.5);
+      doc.setTextColor(...GOLD);
+      doc.setCharSpace(1.4);
+      doc.text('WHAT TO DO', MARGIN, y);
+      doc.setCharSpace(0);
+
+      y += 6;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(11);
+      doc.setTextColor(...TEXT_SOFT);
+      y = wrappedText(doc, sign.action, MARGIN, y, CONTENT_W, 5.6);
+
+      y += 8;
+      divider(doc, y - 2);
+      y += 8;
+    });
+
+    // Closing page
+    if (y > PAGE_H - 80) {
+      doc.addPage();
+      fillPage(doc);
+      topBar(doc);
+      pageMeta(doc, data.lead.name);
+      y = 50;
+    } else {
+      y += 6;
+    }
+    doc.setFont('times', 'italic');
+    doc.setFontSize(20);
+    doc.setTextColor(...GOLD);
+    y = wrappedText(doc, "Come back when you are ready.", MARGIN, y, CONTENT_W, 8);
+
+    y += 6;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(11);
+    doc.setTextColor(...TEXT_SOFT);
+    const closing = "Until then, stay up to date with both Instagram and YouTube, and I will continue to share more value for you to take action on yourself from there. I will keep meeting you where you are in the meantime.";
+    y = wrappedText(doc, closing, MARGIN, y, CONTENT_W, 5.8);
+
+    y += 10;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(...GOLD);
+    doc.textWithLink('Follow on Instagram', MARGIN, y, { url: data.instagramUrl });
+    doc.textWithLink('Subscribe on YouTube', MARGIN + 60, y, { url: data.youtubeUrl });
+  }
+
+  // Apply page numbers after all pages are drawn
+  function applyFooters(doc) {
+    const total = doc.getNumberOfPages();
+    for (let i = 1; i <= total; i++) {
+      doc.setPage(i);
+      bottomFooter(doc, i, total);
+    }
+  }
+
+  // Public entry point
+  window.generateIdentityPDF = function (input) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+
+    const data = {
+      lead: input.lead,
+      results: input.results,
+      archetype: input.archetype,
+      calendlyUrl: getCalendlyUrl(),
+      instagramUrl: getInstagramUrl(),
+      youtubeUrl: getYoutubeUrl(),
+    };
+
+    drawCoverPage(doc, data);
+    drawGapsPage(doc, data);
+    if (input.kind === 'qualified') {
+      drawQualifiedNextPage(doc, data);
+    } else {
+      drawFiveSignsPages(doc, data);
+    }
+    applyFooters(doc);
+
+    const safeName = (input.lead.name || 'identity').replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+    doc.save(`identity-calculator-${safeName}.pdf`);
+  };
+
+  // Read config values from quiz.js scope via DOM links if present, or fallback
+  function getCalendlyUrl() {
+    const a = document.querySelector('#cta-block a[href*="calendly"]');
+    return a ? a.href : 'https://calendly.com/gareth-owen/identity-call';
+  }
+  function getInstagramUrl() {
+    const a = document.querySelector('#cta-block a[href*="instagram"]');
+    return a ? a.href : 'https://instagram.com/gareth.owen';
+  }
+  function getYoutubeUrl() {
+    const a = document.querySelector('#cta-block a[href*="youtube"]');
+    return a ? a.href : 'https://youtube.com/@gareth.owen';
+  }
+})();
+
+</script>
+<script>
+(function () {
+  'use strict';
+
+  // ========== CONFIG ==========
+  const CONFIG = {
+    CALENDLY_URL: 'https://calendly.com/gmdowen/1on1withgareth',
+    INSTAGRAM_URL: 'https://instagram.com/gareth.owen',
+    YOUTUBE_URL: 'https://www.youtube.com/@garethowen',
+    // Lead capture goes to Gareth's Gmail via FormSubmit (no signup required).
+    // First quiz submission will trigger a one-time confirmation email from
+    // FormSubmit to Gmdowen@gmail.com. Click the link in it once and all
+    // future leads arrive instantly as formatted emails.
+    LEAD_ENDPOINT: 'https://formsubmit.co/ajax/Gmdowen@gmail.com',
+  };
+
+  // ========== QUESTIONS ==========
+  const QUESTIONS = [
+    {
+      id: 'Q1',
+      type: 'slider',
+      text: "When you look at your life right now, your routine, your body, your business, your relationships, how aligned does it feel with the man you know you're meant to be?",
+      min: 0, max: 10, default: 5,
+      labels: { left: 'Total misalignment', right: 'Perfectly aligned' },
+    },
+    {
+      id: 'Q2',
+      type: 'abcd',
+      text: "What does the voice in your head sound like most days?",
+      options: [
+        { v: 'A', t: "Mostly negative. I doubt myself, replay failures, and second-guess every move I make." },
+        { v: 'B', t: "Mixed. Depends on the day, the situation, who I am around." },
+        { v: 'C', t: "Mostly neutral. I try not to overthink, I just get on with it." },
+        { v: 'D', t: "Mostly empowering. I talk to myself like a coach. I expect to win." },
+      ],
+    },
+    {
+      id: 'Q3',
+      type: 'abcd',
+      text: "Describe your current morning.",
+      options: [
+        { v: 'A', t: "Roll out of bed when I have to, grab coffee, scroll through my phone, react to whatever the day throws at me." },
+        { v: 'B', t: "I have a vague routine but I miss it half the time." },
+        { v: 'C', t: "I have a routine that mostly holds 4 or 5 days a week." },
+        { v: 'D', t: "I have a non-negotiable morning protocol I hit 6 or 7 days a week." },
+      ],
+    },
+    {
+      id: 'Q4',
+      type: 'abcd',
+      text: "In the last 12 months, what have you actually invested in yourself? Coaching, programs, masterminds, books, gear, environment. Not free YouTube.",
+      options: [
+        { v: 'A', t: "Nothing, or close to nothing." },
+        { v: 'B', t: "Under $1,000." },
+        { v: 'C', t: "$1,000 to $5,000." },
+        { v: 'D', t: "Over $5,000." },
+      ],
+    },
+    {
+      id: 'Q5',
+      type: 'abcd',
+      text: "The last time someone gave you hard, direct, uncomfortable feedback, how did you actually handle it?",
+      options: [
+        { v: 'A', t: "Got defensive, made excuses, or wrote them off internally." },
+        { v: 'B', t: "Felt hurt at first. Took a while to come around." },
+        { v: 'C', t: "Took it on board after some processing and made adjustments." },
+        { v: 'D', t: "Sat with it, found the truth in it, and was using it as fuel within 48 hours." },
+      ],
+    },
+    {
+      id: 'Q6',
+      type: 'abcd',
+      text: "If a man you deeply respected sat across from you right now and asked you to name the one truth about your life you have been avoiding, could you?",
+      options: [
+        { v: 'A', t: "No. I would deflect, joke about it, or change the subject." },
+        { v: 'B', t: "I could name it in my head, but I would not say it out loud." },
+        { v: 'C', t: "I could name it honestly, but I have not taken action on it yet." },
+        { v: 'D', t: "I have already named it, owned it, and I am in motion on it." },
+      ],
+    },
+    {
+      id: 'Q7',
+      type: 'abcd',
+      text: "How often do you actually sit with an uncomfortable truth about yourself, without numbing it (scrolling, drinking, training, working, eating, sex)?",
+      options: [
+        { v: 'A', t: "Almost never. I find a way to bury it before it really lands." },
+        { v: 'B', t: "Rarely. The discomfort wins and I escape." },
+        { v: 'C', t: "Sometimes. I can hold it for a while before I move on." },
+        { v: 'D', t: "Often. Sitting in it is where the real work happens for me." },
+      ],
+    },
+    {
+      id: 'Q8',
+      type: 'abcd',
+      text: "When you are chasing a goal, what fuels you more?",
+      options: [
+        { v: 'A', t: "Pain. Fear of staying stuck where I am, what people will think, the regret I will carry." },
+        { v: 'B', t: "Honestly, it shifts. Sometimes pain, sometimes purpose, often neither." },
+        { v: 'C', t: "A vision of who I am becoming, but I lose sight of it under stress." },
+        { v: 'D', t: "Purpose. A reason bigger than me that I return to every single day, no matter how I feel that morning." },
+      ],
+    },
+    {
+      id: 'Q9',
+      type: 'abcd',
+      text: "How much do other people's opinions affect what you do?",
+      options: [
+        { v: 'A', t: "Heavily. I adjust my behaviour based on what others might think." },
+        { v: 'B', t: "More than I would like to admit, even if I do not show it." },
+        { v: 'C', t: "Some. I notice it but I can usually push past it." },
+        { v: 'D', t: "Almost none. I have decided whose opinions I want at my funeral. The rest is noise." },
+      ],
+    },
+    {
+      id: 'Q10',
+      type: 'abcd',
+      text: "How clearly can you describe the man you are becoming over the next 12 months?",
+      options: [
+        { v: 'A', t: "Not very. I want more but I cannot paint the picture." },
+        { v: 'B', t: "Vaguely. I have ideas but they are fuzzy." },
+        { v: 'C', t: "Pretty clearly. I can describe most of him." },
+        { v: 'D', t: "Crystal clear. His habits, his calendar, his energy, how he walks into a room." },
+      ],
+    },
+    {
+      id: 'Q11',
+      type: 'abcd',
+      text: "When you decide to make a change, what usually happens?",
+      options: [
+        { v: 'A', t: "I think about it for weeks, sometimes months, before I act. If I act at all." },
+        { v: 'B', t: "I start strong but lose momentum within a few weeks." },
+        { v: 'C', t: "I start within a few days and follow through more often than not." },
+        { v: 'D', t: "I move within 24 to 48 hours and I hold the line until it is done." },
+      ],
+    },
+    {
+      id: 'Q12',
+      type: 'abcd',
+      text: "If the right opportunity to transform your identity showed up today, with the right coach, the right structure, the right accountability, what would you do?",
+      options: [
+        { v: 'A', t: "Think about it for a while, maybe come back to it later." },
+        { v: 'B', t: "Want to, but I would need to figure out the money or the timing." },
+        { v: 'C', t: "Seriously explore it and probably move within a week." },
+        { v: 'D', t: "Move on it now. I have waited long enough." },
+      ],
+    },
+  ];
+
+  // ========== ANSWER SCORING ==========
+  // A=0, B=3, C=7, D=10. Slider value used directly.
+  const LETTER_SCORE = { A: 0, B: 3, C: 7, D: 10 };
+
+  // Weights for the two composite scores
+  const IDENTITY_WEIGHTS = { Q1: 2, Q2: 1, Q3: 1, Q8: 1, Q9: 1, Q10: 1, Q11: 1 }; // max 80
+  const COACH_WEIGHTS = { Q4: 2, Q5: 1, Q6: 1, Q7: 1, Q12: 2 }; // max 70
+
+  // ========== ARCHETYPES ==========
+  const ARCHETYPES = {
+    Drifter: {
+      name: 'The Drifter',
+      desc: "You are going through the motions. The fire that should be lighting your decisions is dim, and when truth shows up at your door, you have a thousand ways to dodge it. You believe you are capable of more. You have been believing that for years.",
+    },
+    Seeker: {
+      name: 'The Seeker',
+      desc: "You know exactly how far you are from the man you are meant to be. You feel the gap every single day. But the fire is lit, you are hungry, and you are willing to face hard truth when it shows up. This is the most dangerous position to be in. The right structure right now changes everything.",
+    },
+    LoneWolf: {
+      name: 'The Lone Wolf',
+      desc: "You have built something. From the outside, things look good. But you do not take help easily, you do not sit with feedback well, and the next ceiling above you is one you cannot break alone. The skills that got you here will not get you there.",
+    },
+    Operator: {
+      name: 'The Operator',
+      desc: "You are already executing at a high level. Strong habits, clear vision, coachable mindset. You are not far from your dream identity. The work from here is precision. Surrounding yourself with the right people, refining the next layer, holding the line.",
+    },
+  };
+
+  // ========== GAP DIAGNOSES ==========
+  const GAP_DIAGNOSES = {
+    Q1: "Massive misalignment between who you are and who you are meant to be. You feel it every single morning.",
+    Q2: "Your inner voice is your loudest critic. You would not let another man speak to you the way you speak to yourself.",
+    Q3: "No daily protocol. You are at the mercy of motivation, and motivation does not show up most days.",
+    Q4: "You spend money on everything except yourself. The truth is in your spending.",
+    Q5: "You cannot take hard feedback yet. No coach, no friend, no system can help you until that changes.",
+    Q6: "You cannot name the truth you have been avoiding. Naming it out loud is the first move.",
+    Q7: "You numb the discomfort instead of sitting with it. The work lives inside the discomfort, not around it.",
+    Q8: "You are running on pain instead of purpose. Pain runs out. Purpose compounds.",
+    Q9: "Other people's opinions are still writing your script. Until you decide whose matter, you will keep performing for the wrong audience.",
+    Q10: "Your vision of the future is blurry. You cannot hit a target you cannot see.",
+    Q11: "You think more than you act. The man you want to be moves first and thinks while moving.",
+    Q12: "When opportunity shows up, you delay. You have built a relationship with hesitation.",
+  };
+
+  // ========== STATE ==========
+  const state = {
+    lead: { name: '', email: '', ig: '' },
+    answers: {}, // { Q1: 5, Q2: 'B', ... }
+    currentIndex: 0,
+    results: null,
+  };
+
+  // ========== UTIL ==========
+  function $(sel) { return document.querySelector(sel); }
+  function el(tag, attrs, children) {
+    const e = document.createElement(tag);
+    if (attrs) for (const k in attrs) {
+      if (k === 'class') e.className = attrs[k];
+      else if (k === 'on') for (const ev in attrs.on) e.addEventListener(ev, attrs.on[ev]);
+      else if (k === 'html') e.innerHTML = attrs[k];
+      else e.setAttribute(k, attrs[k]);
+    }
+    if (children) children.forEach(c => e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c));
+    return e;
+  }
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    $('#' + id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ========== SCORING ==========
+  function rawScore(qId) {
+    const a = state.answers[qId];
+    if (a === undefined) return 0;
+    if (typeof a === 'number') return a; // slider
+    return LETTER_SCORE[a] ?? 0;
+  }
+
+  function computeIdentityScore() {
+    let raw = 0, max = 0;
+    for (const q in IDENTITY_WEIGHTS) {
+      raw += rawScore(q) * IDENTITY_WEIGHTS[q];
+      max += 10 * IDENTITY_WEIGHTS[q];
+    }
+    return Math.round((raw / max) * 100);
+  }
+
+  function computeCoachabilityScore() {
+    let raw = 0, max = 0;
+    for (const q in COACH_WEIGHTS) {
+      raw += rawScore(q) * COACH_WEIGHTS[q];
+      max += 10 * COACH_WEIGHTS[q];
+    }
+    return Math.round((raw / max) * 100);
+  }
+
+  function computeArchetype(identity, coach) {
+    const highId = identity >= 50;
+    const highCoach = coach >= 50;
+    if (!highId && !highCoach) return 'Drifter';
+    if (!highId && highCoach) return 'Seeker';
+    if (highId && !highCoach) return 'LoneWolf';
+    return 'Operator';
+  }
+
+  function computeQualification() {
+    const reasons = [];
+    if (state.answers.Q4 === 'A') reasons.push('investment');
+    if (state.answers.Q5 === 'A') reasons.push('coachability');
+    if (state.answers.Q12 === 'A') reasons.push('action');
+    const coach = computeCoachabilityScore();
+    if (reasons.length === 0 && coach < 65) reasons.push('threshold');
+    return { qualified: reasons.length === 0, blockers: reasons };
+  }
+
+  function computeTopGaps() {
+    const scored = QUESTIONS.map(q => ({ id: q.id, score: rawScore(q.id) }));
+    scored.sort((a, b) => a.score - b.score || QUESTIONS.findIndex(q => q.id === a.id) - QUESTIONS.findIndex(q => q.id === b.id));
+    return scored.slice(0, 3).map(s => ({ id: s.id, text: GAP_DIAGNOSES[s.id] }));
+  }
+
+  function computeResults() {
+    const identity = computeIdentityScore();
+    const coach = computeCoachabilityScore();
+    const archetype = computeArchetype(identity, coach);
+    const qualification = computeQualification();
+    const gaps = computeTopGaps();
+    return { identity, coach, archetype, qualification, gaps };
+  }
+
+  // ========== LANDING ==========
+  function initLanding() {
+    $('#lead-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = $('#name').value.trim();
+      const email = $('#email').value.trim();
+      let ig = $('#ig').value.trim();
+      if (!name || !email || !ig) return;
+      if (!ig.startsWith('@')) ig = '@' + ig;
+      state.lead = { name, email, ig };
+      try { localStorage.setItem('ic_lead', JSON.stringify(state.lead)); } catch (e) {}
+      showScreen('screen-quiz');
+      renderQuestion();
+    });
+    // Restore saved lead info if present
+    try {
+      const saved = localStorage.getItem('ic_lead');
+      if (saved) {
+        const l = JSON.parse(saved);
+        if (l.name) $('#name').value = l.name;
+        if (l.email) $('#email').value = l.email;
+        if (l.ig) $('#ig').value = l.ig;
+      }
+    } catch (e) {}
+  }
+
+  // ========== QUIZ ==========
+  function renderQuestion() {
+    const q = QUESTIONS[state.currentIndex];
+    const pct = ((state.currentIndex) / QUESTIONS.length) * 100;
+    $('#progress-fill').style.width = pct + '%';
+    $('#q-counter').textContent = `Question ${state.currentIndex + 1} of ${QUESTIONS.length}`;
+    $('#q-text').textContent = q.text;
+    const opts = $('#q-options');
+    opts.innerHTML = '';
+    if (q.type === 'slider') {
+      const wrap = el('div', { class: 'slider-wrap' });
+      const row = el('div', { class: 'slider-track-row' }, [
+        el('span', null, [q.labels.left]),
+        el('span', null, [q.labels.right]),
+      ]);
+      const slider = el('input', {
+        type: 'range', min: String(q.min), max: String(q.max),
+        step: '1', class: 'slider',
+        value: String(state.answers[q.id] !== undefined ? state.answers[q.id] : q.default),
+      });
+      const valueEl = el('div', { class: 'slider-value' });
+      function updateValue() {
+        valueEl.innerHTML = '';
+        valueEl.appendChild(document.createTextNode(slider.value));
+        const suffix = el('span', { class: 'slider-value-suffix' }, [' / 10']);
+        valueEl.appendChild(suffix);
+      }
+      slider.addEventListener('input', () => {
+        state.answers[q.id] = parseInt(slider.value, 10);
+        updateValue();
+        $('#btn-next').disabled = false;
+      });
+      updateValue();
+      wrap.appendChild(row);
+      wrap.appendChild(slider);
+      wrap.appendChild(valueEl);
+      opts.appendChild(wrap);
+      // Slider always has a value
+      if (state.answers[q.id] === undefined) {
+        state.answers[q.id] = q.default;
+      }
+      $('#btn-next').disabled = false;
+    } else {
+      q.options.forEach((opt) => {
+        const isSelected = state.answers[q.id] === opt.v;
+        const btn = el('button', {
+          type: 'button',
+          class: 'option' + (isSelected ? ' selected' : ''),
+          on: {
+            click: () => {
+              state.answers[q.id] = opt.v;
+              renderQuestion();
+              $('#btn-next').disabled = false;
+            },
+          },
+        }, [
+          el('span', { class: 'option-letter' }, [opt.v]),
+          el('span', { class: 'option-text' }, [opt.t]),
+        ]);
+        opts.appendChild(btn);
+      });
+      $('#btn-next').disabled = state.answers[q.id] === undefined;
+    }
+    $('#btn-back').disabled = state.currentIndex === 0;
+    const lastIndex = QUESTIONS.length - 1;
+    $('#btn-next').textContent = state.currentIndex === lastIndex ? 'See My Results' : 'Next';
+  }
+
+  function initQuiz() {
+    $('#btn-next').addEventListener('click', () => {
+      if (state.currentIndex < QUESTIONS.length - 1) {
+        state.currentIndex++;
+        renderQuestion();
+      } else {
+        finishQuiz();
+      }
+    });
+    $('#btn-back').addEventListener('click', () => {
+      if (state.currentIndex > 0) {
+        state.currentIndex--;
+        renderQuestion();
+      }
+    });
+  }
+
+  // ========== CALCULATING ==========
+  function finishQuiz() {
+    state.results = computeResults();
+    $('#progress-fill').style.width = '100%';
+    showScreen('screen-calculating');
+    // Fire lead capture in background
+    submitLead(state.lead, state.answers, state.results)
+      .catch(err => console.warn('Lead capture failed (non-blocking):', err));
+    setTimeout(() => {
+      showScreen('screen-results');
+      renderResults();
+    }, 2200);
+  }
+
+  // ========== LEAD CAPTURE ==========
+  // Posts a human-readable payload to FormSubmit, which emails Gareth.
+  // Each lead arrives as a formatted email with full question text and
+  // selected answer text so it can be scanned at a glance.
+  async function submitLead(lead, answers, results) {
+    if (!CONFIG.LEAD_ENDPOINT) return;
+    const archetypeName = ARCHETYPES[results.archetype].name;
+    const status = results.qualification.qualified
+      ? 'QUALIFIED: book the call'
+      : 'UNQUALIFIED: nurture path';
+    const blockers = results.qualification.blockers.join(', ') || 'none';
+
+    const payload = {
+      _subject: `New Identity Calculator Lead: ${lead.name} (${results.qualification.qualified ? 'QUALIFIED' : 'UNQUALIFIED'})`,
+      _template: 'table',
+      _captcha: 'false',
+      _replyto: lead.email,
+      'Name': lead.name,
+      'Email': lead.email,
+      'Instagram': lead.ig,
+      'Status': status,
+      'Identity Score': `${results.identity} / 100`,
+      'Coachability Score': `${results.coach} / 100`,
+      'Archetype': archetypeName,
+      'Blockers': blockers,
+      'Submitted': new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
+    };
+
+    QUESTIONS.forEach((q, i) => {
+      const a = answers[q.id];
+      let answerText;
+      if (q.type === 'slider') {
+        answerText = `${a} / 10`;
+      } else {
+        const opt = q.options.find(o => o.v === a);
+        answerText = opt ? `${a}. ${opt.t}` : String(a ?? '');
+      }
+      const num = String(i + 1).padStart(2, '0');
+      payload[`Q${num}. ${q.text}`] = answerText;
+    });
+
+    try {
+      await fetch(CONFIG.LEAD_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+    } catch (e) {
+      console.warn('Lead POST error', e);
+    }
+  }
+
+  // ========== RESULTS ==========
+  function renderResults() {
+    const r = state.results;
+    const arche = ARCHETYPES[r.archetype];
+
+    animateNumber('#identity-score', 0, r.identity, 1400);
+    animateNumber('#coach-score', 0, r.coach, 1400);
+    setTimeout(() => { $('#coach-fill').style.width = r.coach + '%'; }, 200);
+
+    $('#archetype-name').textContent = arche.name;
+    $('#archetype-desc').textContent = arche.desc;
+
+    const gapsList = $('#gaps-list');
+    gapsList.innerHTML = '';
+    r.gaps.forEach(g => {
+      gapsList.appendChild(el('li', null, [g.text]));
+    });
+
+    renderVerdict(r);
+    renderCTAs(r);
+  }
+
+  function renderVerdict(r) {
+    const block = $('#verdict-block');
+    block.innerHTML = '';
+    const q = r.qualification;
+    if (q.qualified) {
+      block.appendChild(el('h3', null, ['You are the kind of man this work was built for.']));
+      block.appendChild(el('p', { html: `Based on your answers, you are not where you want to be, and you know it. The fire is lit. You are hungry. You are coachable. You are ready to move. <strong>Let us get on a call.</strong>` }));
+      block.appendChild(el('p', { html: `Programs start at <strong>$3,500</strong> for the strongest results. The higher the commitment you make, the deeper the transformation you walk out with. Full details on the call.` }));
+    } else if (q.blockers.includes('coachability')) {
+      block.appendChild(el('h3', null, ['Build the muscle first. Then come back.']));
+      block.appendChild(el('p', null, ['Your relationship with hard, direct feedback would make coaching frustrating for both of us right now. Coaching only works when truth lands. That muscle has to be built before this work can land.']));
+      block.appendChild(el('p', null, ['Stay up to date with both Instagram and YouTube while you do the work. I will keep meeting you where you are.']));
+    } else {
+      block.appendChild(el('h3', null, ['Come back when you are ready.']));
+      block.appendChild(el('p', null, ['Right now, you are not in a position to invest in yourself the way this work requires. That is okay, but it is not the work we are doing here.']));
+      block.appendChild(el('p', null, ['Until then, stay up to date with both Instagram and YouTube, and I will continue to share more value for you to take action on yourself from there. I will keep meeting you where you are in the meantime.']));
+    }
+  }
+
+  function renderCTAs(r) {
+    const block = $('#cta-block');
+    block.innerHTML = '';
+    if (r.qualification.qualified) {
+      const calBtn = el('a', { class: 'cta', href: CONFIG.CALENDLY_URL, target: '_blank', rel: 'noopener' }, ['Book Your Call']);
+      block.appendChild(calBtn);
+      const pdfBtn = el('button', {
+        type: 'button',
+        class: 'cta cta-secondary',
+        on: { click: () => downloadPDF('qualified') },
+      }, ['Download Your PDF']);
+      block.appendChild(pdfBtn);
+    } else {
+      const pdfBtn = el('button', {
+        type: 'button',
+        class: 'cta',
+        on: { click: () => downloadPDF('unqualified') },
+      }, ["Download Your PDF: 5 Signs You're Not Ready (Yet)"]);
+      block.appendChild(pdfBtn);
+      const row = el('div', { class: 'cta-row' }, [
+        el('a', { class: 'cta cta-secondary', href: CONFIG.INSTAGRAM_URL, target: '_blank', rel: 'noopener' }, ['Follow on Instagram']),
+        el('a', { class: 'cta cta-secondary', href: CONFIG.YOUTUBE_URL, target: '_blank', rel: 'noopener' }, ['Subscribe on YouTube']),
+      ]);
+      block.appendChild(row);
+    }
+  }
+
+  function downloadPDF(kind) {
+    if (typeof window.generateIdentityPDF !== 'function') {
+      alert('PDF generator not loaded.');
+      return;
+    }
+    window.generateIdentityPDF({
+      kind,
+      lead: state.lead,
+      answers: state.answers,
+      results: state.results,
+      archetype: ARCHETYPES[state.results.archetype],
+      questions: QUESTIONS,
+    });
+  }
+
+  // ========== ANIMATIONS ==========
+  function animateNumber(sel, from, to, duration) {
+    const elx = $(sel);
+    const start = performance.now();
+    function tick(now) {
+      const t = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - t, 3);
+      const val = Math.round(from + (to - from) * eased);
+      elx.textContent = val;
+      if (t < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // ========== INIT ==========
+  document.addEventListener('DOMContentLoaded', () => {
+    initLanding();
+    initQuiz();
+  });
+
+})();
+
+</script>
+
+</body>
+</html>
