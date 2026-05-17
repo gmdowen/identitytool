@@ -877,14 +877,14 @@ form {
     pageMeta(doc, data.lead.name);
 
     // "An identity diagnostic for {Name}"
-    let y = 38;
+    let y = 42;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.setTextColor(...TEXT_DIM);
     doc.text('An identity diagnostic for', MARGIN, y);
     y += 8;
     doc.setFont('times', 'italic');
-    doc.setFontSize(28);
+    doc.setFontSize(26);
     doc.setTextColor(...TEXT);
     doc.text(data.lead.name, MARGIN, y);
 
@@ -899,8 +899,9 @@ form {
 
     divider(doc, y + 8);
 
-    // SCORE
-    y = 100;
+    // SCORE BLOCK
+    // Label (small caps) well above the big number to avoid overlap
+    y = 92;
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(8.5);
     doc.setTextColor(...TEXT_DIM);
@@ -908,62 +909,67 @@ form {
     doc.text('IDENTITY ALIGNMENT', PAGE_W / 2, y, { align: 'center' });
     doc.setCharSpace(0);
 
-    y += 18;
+    // Big score number, baseline pushed well below label
+    y = 132;
     doc.setFont('times', 'normal');
-    doc.setFontSize(96);
+    doc.setFontSize(72);
     doc.setTextColor(...GOLD);
     doc.text(String(data.results.identity), PAGE_W / 2, y, { align: 'center' });
-    doc.setFontSize(18);
-    doc.setTextColor(...TEXT_DIM);
-    const numWidth = doc.getTextWidth(String(data.results.identity));
-    doc.text('/100', PAGE_W / 2 + numWidth / 2 + 3, y);
 
-    y += 14;
-    divider(doc, y);
+    // "/ 100" on its own line below, centered, smaller, dim
+    y = 144;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(12);
+    doc.setTextColor(...TEXT_DIM);
+    doc.setCharSpace(1);
+    doc.text('/ 100', PAGE_W / 2, y, { align: 'center' });
+    doc.setCharSpace(0);
+
+    divider(doc, 162);
 
     // Archetype
-    y += 16;
+    let ya = 176;
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(8.5);
     doc.setTextColor(...TEXT_DIM);
     doc.setCharSpace(1.6);
-    doc.text('YOUR ARCHETYPE', MARGIN, y);
+    doc.text('YOUR ARCHETYPE', MARGIN, ya);
     doc.setCharSpace(0);
 
-    y += 10;
+    ya += 10;
     doc.setFont('times', 'italic');
-    doc.setFontSize(30);
+    doc.setFontSize(28);
     doc.setTextColor(...GOLD);
-    doc.text(data.archetype.name, MARGIN, y);
+    doc.text(data.archetype.name, MARGIN, ya);
 
-    y += 12;
+    ya += 11;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(11);
     doc.setTextColor(...TEXT_SOFT);
-    y = wrappedText(doc, data.archetype.desc, MARGIN, y, CONTENT_W, 5.6);
+    ya = wrappedText(doc, data.archetype.desc, MARGIN, ya, CONTENT_W, 5.6);
 
     // Coachability
-    y += 12;
+    ya += 12;
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(8.5);
     doc.setTextColor(...TEXT_DIM);
     doc.setCharSpace(1.6);
-    doc.text('COACHABILITY', MARGIN, y);
+    doc.text('COACHABILITY', MARGIN, ya);
     doc.setCharSpace(0);
 
-    y += 4;
-    const barY = y + 1;
+    ya += 4;
+    const barY = ya + 1;
     const barW = CONTENT_W;
     doc.setFillColor(...LINE);
     doc.rect(MARGIN, barY, barW, 1.2, 'F');
     doc.setFillColor(...GOLD);
     doc.rect(MARGIN, barY, barW * (data.results.coach / 100), 1.2, 'F');
 
-    y += 9;
+    ya += 9;
     doc.setFont('times', 'normal');
     doc.setFontSize(13);
     doc.setTextColor(...TEXT);
-    doc.text(`${data.results.coach}/100`, MARGIN, y);
+    doc.text(`${data.results.coach} / 100`, MARGIN, ya);
   }
 
   function drawGapsPage(doc, data) {
@@ -1153,34 +1159,47 @@ form {
       y += 8;
     });
 
-    // Closing page
-    if (y > PAGE_H - 80) {
-      doc.addPage();
-      fillPage(doc);
-      topBar(doc);
-      pageMeta(doc, data.lead.name);
-      y = 50;
-    } else {
-      y += 6;
-    }
-    doc.setFont('times', 'italic');
-    doc.setFontSize(20);
-    doc.setTextColor(...GOLD);
-    y = wrappedText(doc, "Come back when you are ready.", MARGIN, y, CONTENT_W, 8);
+    // Closing page (always a fresh page so the message has space to breathe)
+    doc.addPage();
+    fillPage(doc);
+    topBar(doc);
+    pageMeta(doc, data.lead.name);
+    y = 60;
 
-    y += 6;
+    doc.setFont('times', 'italic');
+    doc.setFontSize(26);
+    doc.setTextColor(...GOLD);
+    y = wrappedText(doc, "You are not there yet. That is the point.", MARGIN, y, CONTENT_W, 10);
+
+    y += 10;
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(11);
+    doc.setFontSize(11.5);
+    doc.setTextColor(...TEXT);
+    const para1 = "Every man on the other side of this work started exactly where you are right now. Reading a list of his own gaps. Deciding whether to look away or do something about it. The five signs above are a map. You know what to do. The only question left is whether you do it.";
+    y = wrappedText(doc, para1, MARGIN, y, CONTENT_W, 6);
+
+    y += 8;
     doc.setTextColor(...TEXT_SOFT);
-    const closing = "Until then, stay up to date with both Instagram and YouTube, and I will continue to share more value for you to take action on yourself from there. I will keep meeting you where you are in the meantime.";
-    y = wrappedText(doc, closing, MARGIN, y, CONTENT_W, 5.8);
+    const para2 = "Read this once a week. Take one action a week. Come back in 90 days and take the calculator again. Show me a different man.";
+    y = wrappedText(doc, para2, MARGIN, y, CONTENT_W, 6);
+
+    y += 14;
+    divider(doc, y);
+
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(...TEXT_DIM);
+    doc.setCharSpace(1.6);
+    doc.text('STAY CLOSE WHILE YOU DO THE WORK', MARGIN, y);
+    doc.setCharSpace(0);
 
     y += 10;
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9);
+    doc.setFontSize(10);
     doc.setTextColor(...GOLD);
     doc.textWithLink('Follow on Instagram', MARGIN, y, { url: data.instagramUrl });
-    doc.textWithLink('Subscribe on YouTube', MARGIN + 60, y, { url: data.youtubeUrl });
+    doc.textWithLink('Subscribe on YouTube', MARGIN + 62, y, { url: data.youtubeUrl });
   }
 
   // Apply page numbers after all pages are drawn
@@ -1192,7 +1211,8 @@ form {
     }
   }
 
-  // Public entry point
+  // Public entry point. URLs are passed in by quiz.js from CONFIG so there
+  // is a single source of truth.
   window.generateIdentityPDF = function (input) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
@@ -1201,9 +1221,9 @@ form {
       lead: input.lead,
       results: input.results,
       archetype: input.archetype,
-      calendlyUrl: getCalendlyUrl(),
-      instagramUrl: getInstagramUrl(),
-      youtubeUrl: getYoutubeUrl(),
+      calendlyUrl: input.urls.calendly,
+      instagramUrl: input.urls.instagram,
+      youtubeUrl: input.urls.youtube,
     };
 
     drawCoverPage(doc, data);
@@ -1218,20 +1238,6 @@ form {
     const safeName = (input.lead.name || 'identity').replace(/[^a-z0-9]+/gi, '-').toLowerCase();
     doc.save(`identity-calculator-${safeName}.pdf`);
   };
-
-  // Read config values from quiz.js scope via DOM links if present, or fallback
-  function getCalendlyUrl() {
-    const a = document.querySelector('#cta-block a[href*="calendly"]');
-    return a ? a.href : 'https://calendly.com/gareth-owen/identity-call';
-  }
-  function getInstagramUrl() {
-    const a = document.querySelector('#cta-block a[href*="instagram"]');
-    return a ? a.href : 'https://instagram.com/gareth.owen';
-  }
-  function getYoutubeUrl() {
-    const a = document.querySelector('#cta-block a[href*="youtube"]');
-    return a ? a.href : 'https://youtube.com/@gareth.owen';
-  }
 })();
 
 </script>
@@ -1241,7 +1247,7 @@ form {
 
   // ========== CONFIG ==========
   const CONFIG = {
-    CALENDLY_URL: 'https://calendly.com/gmdowen/1on1withgareth',
+    CALENDLY_URL: 'https://calendly.com/gmdowen/identityaudit',
     INSTAGRAM_URL: 'https://instagram.com/gareth.owen',
     YOUTUBE_URL: 'https://www.youtube.com/@garethowen',
     // Lead capture goes to Gareth's Gmail via FormSubmit (no signup required).
@@ -1774,6 +1780,11 @@ form {
       results: state.results,
       archetype: ARCHETYPES[state.results.archetype],
       questions: QUESTIONS,
+      urls: {
+        calendly: CONFIG.CALENDLY_URL,
+        instagram: CONFIG.INSTAGRAM_URL,
+        youtube: CONFIG.YOUTUBE_URL,
+      },
     });
   }
 

@@ -3,7 +3,7 @@
 
   // ========== CONFIG ==========
   const CONFIG = {
-    CALENDLY_URL: 'https://calendly.com/gmdowen/1on1withgareth',
+    CALENDLY_URL: 'https://calendly.com/gmdowen/identityaudit',
     INSTAGRAM_URL: 'https://instagram.com/gareth.owen',
     YOUTUBE_URL: 'https://www.youtube.com/@garethowen',
     // Lead capture goes to Gareth's Gmail via FormSubmit (no signup required).
@@ -536,6 +536,11 @@
       results: state.results,
       archetype: ARCHETYPES[state.results.archetype],
       questions: QUESTIONS,
+      urls: {
+        calendly: CONFIG.CALENDLY_URL,
+        instagram: CONFIG.INSTAGRAM_URL,
+        youtube: CONFIG.YOUTUBE_URL,
+      },
     });
   }
 
