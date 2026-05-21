@@ -12,7 +12,10 @@
     // Gareth views leads at:
     //   https://supabase.com/dashboard/project/ysrlpduwbccfbowwcujk/editor
     SUPABASE_URL: 'https://ysrlpduwbccfbowwcujk.supabase.co',
-    SUPABASE_KEY: 'sb_publishable_Bh22LYUOpBb-USnjSbGreg_eRGHGNYk',
+    // Anon JWT key. Public by design (browsers expose it). RLS on the leads
+    // table prevents any direct read/write from this key — all writes go
+    // through the submit-lead edge function which uses the service role.
+    SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzcmxwZHV3YmNjZmJvd3djdWprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5OTE1OTYsImV4cCI6MjA5NDU2NzU5Nn0._bpL45lfMTaStqivNe9DdmykuZcUIlDY0DPMFC3CMBs',
   };
 
   // ========== QUESTIONS ==========
